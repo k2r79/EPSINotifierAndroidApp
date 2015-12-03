@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EPSI Planning</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="enable_notifications">Activer les notifications</string>
+    <string name="test_notifications">Tester les notifications</string>
+    <string name="disable_notifications">Désactiver les notifications</string>
+
+</resources>
