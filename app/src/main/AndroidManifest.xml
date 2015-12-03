@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.epsi.epsinotifier.app" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -17,9 +19,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".RefreshReceiver"/>
+        <receiver android:name="fr.epsi.epsinotifier.service.RefreshReceiver"/>
 
-        <service android:name=".EPSIIntentService" />
+        <service android:name="fr.epsi.epsinotifier.service.EPSIIntentService" />
     </application>
 
 </manifest>
