@@ -1,15 +1,16 @@
 package fr.epsi.epsinotifier.app;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import fr.epsi.epsinotifier.service.RefreshReceiver;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Calendar;
 
@@ -31,6 +32,27 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 start();
+            }
+        });
+
+        Button testNotificationsButton = (Button) findViewById(R.id.testNotificationsButton);
+        testNotificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int notificationId = 1;
+
+                DateTimeFormatter outputDateFormatter = DateTimeFormat.forPattern("HH:mm");
+
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setVibrate(new long[]{ 250, 800 })
+                        .setSmallIcon(R.drawable.logo_epsi)
+                        .setContentTitle("EPSI")
+                        .setContentText("Notification de test");
+
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                notificationManager.notify(notificationId, notificationBuilder.build());
             }
         });
     }
