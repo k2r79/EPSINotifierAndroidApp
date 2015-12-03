@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import fr.epsi.epsinotifier.service.RefreshReceiver;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Calendar;
 
@@ -18,6 +16,7 @@ import java.util.Calendar;
 public class MainActivity extends Activity {
 
     private PendingIntent pendingIntent;
+    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +26,21 @@ public class MainActivity extends Activity {
         Intent alarmIntent = new Intent(MainActivity.this, RefreshReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
 
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
         Button enableNotificationsButton = (Button) findViewById(R.id.enableNotificationsButton);
         enableNotificationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 start();
+            }
+        });
+
+        Button disableNotificationsButton = (Button) findViewById(R.id.disableNotificationsButton);
+        disableNotificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stop();
             }
         });
 
@@ -41,11 +50,9 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 int notificationId = 1;
 
-                DateTimeFormatter outputDateFormatter = DateTimeFormat.forPattern("HH:mm");
-
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                         .setDefaults(Notification.DEFAULT_ALL)
-                        .setVibrate(new long[]{ 250, 800 })
+                        .setVibrate(new long[]{ 250, 250, 250 })
                         .setSmallIcon(R.drawable.logo_epsi)
                         .setContentTitle("EPSI")
                         .setContentText("Notification de test");
@@ -59,13 +66,18 @@ public class MainActivity extends Activity {
 
     private void start() {
         Calendar startTime = Calendar.getInstance();
-        startTime.set(Calendar.MINUTE, 55);
+        startTime.set(Calendar.MINUTE, 50);
         startTime.set(Calendar.SECOND, 0);
         startTime.set(Calendar.MILLISECOND, 0);
 
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, startTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, startTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
 
         Toast.makeText(this, "Notifications activées", Toast.LENGTH_SHORT).show();
+    }
+
+    private void stop() {
+        alarmManager.cancel(pendingIntent);
+
+        Toast.makeText(this, "Notifications desactivées", Toast.LENGTH_SHORT).show();
     }
 }

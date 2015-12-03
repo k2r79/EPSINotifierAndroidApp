@@ -69,7 +69,7 @@ public class EPSIIntentService extends IntentService {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setVibrate(new long[]{ 250, 800 })
+                .setVibrate(new long[]{ 250, 250, 250 })
                 .setSmallIcon(R.drawable.logo_epsi)
                 .setContentTitle(cours.getMatiere())
                 .setContentText(outputDateFormatter.print(cours.getHoraireDebut()) + " - " + cours.getSalle());

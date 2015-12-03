@@ -16,9 +16,17 @@
 
     <Button android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/disable_notifications"
+            android:id="@+id/disableNotificationsButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/enableNotificationsButton" />
+
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/test_notifications"
             android:id="@+id/testNotificationsButton"
             android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/enableNotificationsButton"/>
+            android:layout_below="@+id/disableNotificationsButton"
+            android:layout_marginTop="20dp" />
 
 </RelativeLayout>
