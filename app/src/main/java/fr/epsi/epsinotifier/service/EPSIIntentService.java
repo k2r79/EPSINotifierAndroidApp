@@ -5,7 +5,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
+import android.text.Html;
 import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -65,14 +68,21 @@ public class EPSIIntentService extends IntentService {
     private void sendNotification(Cours cours) {
         int notificationId = 1;
 
-        DateTimeFormatter outputDateFormatter = DateTimeFormat.forPattern("HH:mm");
+        DateTimeFormatter outputDateFormatter = DateTimeFormat.forPattern("HH'h'mm");
+
+        Bitmap backgroundBitmap = Bitmap.createBitmap(320,320, Bitmap.Config.ARGB_8888);
+        backgroundBitmap.eraseColor(Color.DKGRAY);
+
+        NotificationCompat.WearableExtender notificationExtender = new NotificationCompat.WearableExtender();
+        notificationExtender.setBackground(backgroundBitmap);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setVibrate(new long[]{ 250, 250, 250 })
                 .setSmallIcon(R.drawable.logo_epsi)
-                .setContentTitle(cours.getMatiere())
-                .setContentText(outputDateFormatter.print(cours.getHoraireDebut()) + " - " + cours.getSalle());
+                .setContentTitle(cours.getSalle())
+                .setContentText(Html.fromHtml("<b>" + outputDateFormatter.print(cours.getHoraireDebut()) + "</b> | <small>" + cours.getMatiere() + "</small>"))
+                .extend(notificationExtender);
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 

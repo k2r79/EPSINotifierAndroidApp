@@ -3,6 +3,7 @@
     package="fr.epsi.epsinotifier.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +20,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="fr.epsi.epsinotifier.service.RefreshReceiver"/>
+        <receiver android:name="fr.epsi.epsinotifier.service.RefreshReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="fr.epsi.epsinotifier.service.EPSIIntentService" />
     </application>
