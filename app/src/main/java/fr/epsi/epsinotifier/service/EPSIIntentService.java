@@ -40,22 +40,25 @@ public class EPSIIntentService extends IntentService {
 
                 try {
                     JSONObject coursJson = new JSONObject(new String(responseBody, "UTF-8"));
-                    JSONObject dataJson = coursJson.getJSONArray("data").getJSONObject(0);
 
-                    cours.setMatiere(dataJson.getString("matiere"));
-                    cours.setProf(dataJson.getString("prof"));
-                    cours.setSalle(dataJson.getString("salle"));
+                    if (coursJson.getJSONArray("data").length() > 0) {
+                        JSONObject dataJson = coursJson.getJSONArray("data").getJSONObject(0);
 
-                    String horaireDebut = dataJson.getString("horaire_debut");
-                    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                    cours.setHoraireDebut(formatter.parseDateTime(horaireDebut));
+                        cours.setMatiere(dataJson.getString("matiere"));
+                        cours.setProf(dataJson.getString("prof"));
+                        cours.setSalle(dataJson.getString("salle"));
+
+                        String horaireDebut = dataJson.getString("horaire_debut");
+                        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                        cours.setHoraireDebut(formatter.parseDateTime(horaireDebut));
+
+                        sendNotification(cours);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
-                sendNotification(cours);
             }
 
             @Override
