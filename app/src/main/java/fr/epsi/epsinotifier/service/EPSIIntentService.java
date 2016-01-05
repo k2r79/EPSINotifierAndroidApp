@@ -16,6 +16,7 @@ import com.loopj.android.http.SyncHttpClient;
 import cz.msebera.android.httpclient.Header;
 import fr.epsi.epsinotifier.app.R;
 import fr.epsi.epsinotifier.entity.Cours;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
@@ -33,6 +34,10 @@ public class EPSIIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        if (!isSchoolTime()) {
+            return;
+        }
+
         asyncHttpClient.get(this, "http://epsi-planning.herokuapp.com/cours/prochain", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -90,5 +95,13 @@ public class EPSIIntentService extends IntentService {
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(notificationId, notificationBuilder.build());
+    }
+
+    private boolean isSchoolTime() {
+        LocalDateTime today = new LocalDateTime();
+
+        return today.getDayOfWeek() <= 5
+                && today.getHourOfDay() >= 8
+                && today.getHourOfDay() <= 18;
     }
 }

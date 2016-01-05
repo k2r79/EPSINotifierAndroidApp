@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import org.joda.time.LocalDateTime;
 
 import java.util.Calendar;
 
@@ -32,9 +31,7 @@ public class RefreshReceiver extends BroadcastReceiver {
             Log.i("EPSI Planning", "Ajout de l'alarme EPSI planning...");
             scheduleAlarms();
 
-            if (isSchoolTime()) {
-                context.startService(epsiIntent);
-            }
+            context.startService(epsiIntent);
         }
     }
 
@@ -47,13 +44,5 @@ public class RefreshReceiver extends BroadcastReceiver {
         startTime.set(Calendar.MILLISECOND, 0);
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, startTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
-    }
-
-    private boolean isSchoolTime() {
-        LocalDateTime today = new LocalDateTime();
-
-        return today.getDayOfWeek() <= 5
-                && today.getHourOfDay() >= 8
-                && today.getHourOfDay() <= 18;
     }
 }
