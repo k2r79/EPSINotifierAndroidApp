@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import org.joda.time.LocalDateTime;
 
 import java.util.Calendar;
@@ -13,6 +14,7 @@ public class RefreshReceiver extends BroadcastReceiver {
 
     private Context context;
     private Intent epsiIntent;
+    private PendingIntent pendingIntent;
     private AlarmManager alarmManager;
 
     @Override
@@ -21,16 +23,22 @@ public class RefreshReceiver extends BroadcastReceiver {
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         epsiIntent = new Intent(context, EPSIIntentService.class);
+        pendingIntent = PendingIntent.getService(context, 0, epsiIntent, 0);
 
-        scheduleAlarms();
+        if (intent.getBooleanExtra("stop", false)) {
+            Log.i("EPSI Planning", "Suppression de l'alarme EPSI planning...");
+            alarmManager.cancel(pendingIntent);
+        } else {
+            Log.i("EPSI Planning", "Ajout de l'alarme EPSI planning...");
+            scheduleAlarms();
 
-        if (isSchoolTime()) {
-            context.startService(epsiIntent);
+            if (isSchoolTime()) {
+                context.startService(epsiIntent);
+            }
         }
     }
 
     private void scheduleAlarms() {
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, epsiIntent, 0);
         alarmManager.cancel(pendingIntent);
 
         Calendar startTime = Calendar.getInstance();

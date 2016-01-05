@@ -15,6 +15,7 @@ import fr.epsi.epsinotifier.service.RefreshReceiver;
 
 public class MainActivity extends Activity {
 
+    private Intent alarmIntent;
     private PendingIntent pendingIntent;
     private AlarmManager alarmManager;
 
@@ -23,7 +24,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent alarmIntent = new Intent(MainActivity.this, RefreshReceiver.class);
+        alarmIntent = new Intent(MainActivity.this, RefreshReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -58,14 +59,14 @@ public class MainActivity extends Activity {
     }
 
     private void start() {
-        Intent intent = new Intent(MainActivity.this, RefreshReceiver.class);
-        sendBroadcast(intent);
+        sendBroadcast(alarmIntent);
 
         Toast.makeText(this, "Notifications activées", Toast.LENGTH_SHORT).show();
     }
 
     private void stop() {
-        alarmManager.cancel(pendingIntent);
+        alarmIntent.putExtra("stop", false);
+        sendBroadcast(alarmIntent);
 
         Toast.makeText(this, "Notifications desactivées", Toast.LENGTH_SHORT).show();
     }
